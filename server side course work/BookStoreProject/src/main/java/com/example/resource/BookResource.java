@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
     
-    private static Map<Integer,Book> books = new HashMap<>();
+    static Map<Integer,Book> books = new HashMap<>();
     private static AtomicInteger bookIdCounter = new AtomicInteger(1);
     
     @POST
@@ -47,6 +47,14 @@ public class BookResource {
     public Book getBook(@PathParam("id") int id){
         Book book = books.get(id);
         if (book == null) throw new BookNotFoundException("Book with Id "+id+" not found");
+        return book;
+    }
+    
+    @GET
+    @Path("/{AuthorId}")
+    public Book getByAuthor(@PathParam("AuthorId") int id){
+        Book book = books.get(id);
+        if (book == null) throw new BookNotFoundException(" not found");
         return book;
     }
     
