@@ -65,8 +65,9 @@ public class AuthorResource {
     @Path("/{id}/books")
     public List<Book> getBooksByAuthor(@PathParam("id") int id) {
         if(!authors.containsKey(id)) throw new AurthorNotFoundException("not found");
-       return BookResource.books.values().stream()
-                .filter(book -> book.AuthorId == id)
-                .toList();
+       return BookResource.getAllStudentsStatic().stream()
+               .filter(book ->book.getAuthorId() == id).
+               toList();
+       
 }
 }

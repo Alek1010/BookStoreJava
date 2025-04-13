@@ -22,7 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
     
-    static Map<Integer,Book> books = new HashMap<>();
+    
+    private static List<Book> books = new ArrayList<>();
     private static AtomicInteger bookIdCounter = new AtomicInteger(1);
     
     @POST
@@ -32,47 +33,64 @@ public class BookResource {
     }
         int id = bookIdCounter.getAndIncrement();
         book.setId(id);
-        books.put(id, book);
+        books.add(id, book);
         return Response.status(Response.Status.CREATED).entity(book).build();
     
     }
     
+    public static List<Book> getAllStudentsStatic() {
+        return books;
+    }
+    
     @GET
     public Collection<Book> getAllBooks(){
-        return books.values();
+        return books;
     }
+    
+    
     
     @GET
     @Path("/{id")
     public Book getBook(@PathParam("id") int id){
-        Book book = books.get(id);
-        if (book == null) throw new BookNotFoundException("Book with Id "+id+" not found");
-        return book;
+         return books.stream()
+                .filter(book -> book.getId() == id)
+                .findFirst()
+                .orElseThrow(()-> new BookNotFoundException("book ID " + id + " not found"));
+ 
+        
     }
     
-    @GET
-    @Path("/{AuthorId}")
-    public Book getByAuthor(@PathParam("AuthorId") int id){
-        Book book = books.get(id);
-        if (book == null) throw new BookNotFoundException(" not found");
-        return book;
-    }
     
     @PUT
     @Path("/{id}")
     public Book updateBook(@PathParam("id") int id, Book updatedBook){
-        Book book = books.get(id);
-        if(book == null )throw new BookNotFoundException("book with id "+id+" not found");
+        boolean found = false;
         updatedBook.setId(id);
-        books.put(id, updatedBook);
+
+        // Replace the book in the list
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getId() == id) {
+                books.set(i, updatedBook);
+                break;
+            }
+        }
+        if (!found) {
+        throw new BookNotFoundException("Book with ID " + id + " not found");
+        }
+
+
         return updatedBook;
     }
     
     @DELETE
     @Path("/{id}")
     public Response deleteBook(@PathParam("id") int id){
-        if(!books.containsKey(id)) throw new BookNotFoundException("book with id "+id+" not found");
-        books.remove(id);
-        return Response.noContent().build();
+       Book bookToDelete = books.stream()
+            .filter(book -> book.getId() == id)
+            .findFirst()
+            .orElseThrow(() -> new BookNotFoundException("Book with ID " + id + " not found"));
+
+    books.remove(bookToDelete);
+    return Response.noContent().build();
     }
 }
