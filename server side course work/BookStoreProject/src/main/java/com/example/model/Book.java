@@ -11,7 +11,7 @@ package com.example.model;
 public class Book {
     
     private int id;
-    public int AuthorId;
+    private int AuthorId;
     private String title;
     private String isbn;
     private int publicationYear;
