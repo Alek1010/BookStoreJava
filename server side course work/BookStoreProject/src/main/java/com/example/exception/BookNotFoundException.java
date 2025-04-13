@@ -9,5 +9,10 @@ package com.example.exception;
  * @author alekm
  */
 public class BookNotFoundException {
+
+
+    public BookNotFoundException(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
