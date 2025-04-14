@@ -20,43 +20,48 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthorResource {
-    private static Map<Integer,Author> authors = new HashMap<>();
+    private static List<Author> authors = new ArrayList<>();
     private static AtomicInteger authorIdCounter = new AtomicInteger(1);
     
     @POST
     public Response createAuthor(Author author){
         int id  = authorIdCounter.getAndIncrement();
         author.setId(id);
-        authors.put(id, author);
+        authors.add(id, author);
         return Response.status(Response.Status.CREATED).entity(author).build();
+    }
+    
+    public static List<Author> getAllStudentsStatic() {
+        return authors;
     }
     
     @GET
     public Collection<Author> getAllAuthors(){
-        return authors.values();
+        return authors;
     }
     
     @GET
     @Path("/{id}")
     public Author getAuthor(@PathParam("id") int id) {
-        Author author = authors.get(id);
-        if (author == null) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
-        return author;
+        return authors.stream()
+                .filter(book -> book.getId() == id)
+                .findFirst()
+                .orElseThrow(()-> new AurthorNotFoundException("author " + id + " not found"));
     }
     
     @PUT
     @Path("/{id}")
     public Author updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
-        if (!authors.containsKey(id)) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
+        if (!authors.contains(id)) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
         updatedAuthor.setId(id);
-        authors.put(id, updatedAuthor);
+        authors.add(id, updatedAuthor);
         return updatedAuthor;
     }
     
      @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
-        if (!authors.containsKey(id)) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
+        if (!authors.contains(id)) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
         authors.remove(id);
         return Response.noContent().build();
     }
@@ -64,7 +69,7 @@ public class AuthorResource {
     @GET
     @Path("/{id}/books")
     public List<Book> getBooksByAuthor(@PathParam("id") int id) {
-        if(!authors.containsKey(id)) throw new AurthorNotFoundException("not found");
+        if(!authors.contains(id)) throw new AurthorNotFoundException("not found");
        return BookResource.getAllStudentsStatic().stream()
                .filter(book ->book.getAuthorId() == id).
                toList();
