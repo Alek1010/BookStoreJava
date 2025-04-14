@@ -48,7 +48,7 @@ public class AuthorResource {
     @Path("/{id}")
     public Author updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
         if (!authors.containsKey(id)) throw new AurthorNotFoundException("Author with ID " + id + " not found.");
-        updatedAuthor.id = id;
+        updatedAuthor.setId(id);
         authors.put(id, updatedAuthor);
         return updatedAuthor;
     }

@@ -7,6 +7,8 @@
     <packaging>war</packaging>
     <name>BookStoreProject-1.0-SNAPSHOT</name>
     
+    
+
     <dependencies>
         <!-- JAX-RS -->
         <dependency>

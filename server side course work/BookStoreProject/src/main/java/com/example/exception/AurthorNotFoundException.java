@@ -8,6 +8,7 @@ package com.example.exception;
  *
  * @author alekm
  */
-public class AurthorNotFoundException {
+public class AurthorNotFoundException  extends RuntimeException{
+     public AurthorNotFoundException(String message) { super(message);}
     
 }
