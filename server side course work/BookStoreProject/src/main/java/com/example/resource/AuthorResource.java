@@ -31,7 +31,7 @@ public class AuthorResource {
         return Response.status(Response.Status.CREATED).entity(author).build();
     }
     
-    public static List<Author> getAllStudentsStatic() {
+    public static List<Author> getAllAurthorsStatic() {
         return authors;
     }
     
@@ -70,7 +70,7 @@ public class AuthorResource {
     @Path("/{id}/books")
     public List<Book> getBooksByAuthor(@PathParam("id") int id) {
         if(!authors.contains(id)) throw new AurthorNotFoundException("not found");
-       return BookResource.getAllStudentsStatic().stream()
+       return BookResource.getAllBooksStatic().stream()
                .filter(book ->book.getAuthorId() == id).
                toList();
        

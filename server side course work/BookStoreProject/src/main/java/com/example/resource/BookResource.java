@@ -38,7 +38,7 @@ public class BookResource {
     
     }
     
-    public static List<Book> getAllStudentsStatic() {
+    public static List<Book> getAllBooksStatic() {
         return books;
     }
     
