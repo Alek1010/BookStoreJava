@@ -14,19 +14,60 @@ import com.example.exception.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
-@Path("/customers")
+@Path("/customers/{customerId}/orders")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResource {
-     private static List<CartItem> carts = new ArrayList<>();
-    
+     private static List<Order> allOrders = new ArrayList<>();
+     private static int orderIdCounter = 1;
+     
      @POST
-     @Path("/items")
-     public Response addItem(@PathParam("customerId") int customerid,CartItem item){
-         if(!CustomerResource.getAllCustomersStatic().contains(customerid)) 
-             throw new CustomerNotFoundException("customer not found");
+     public Response placeOrder(@PathParam("customerId") int customerId){
+         Cart cart = CartResource.getCartStatic().stream().filter(c -> c.getCustomerId() == customerId)
+                 .findFirst()
+                 .orElseThrow(()-> new CartNotFoundException("cart not found"));
          
-         //Book book = BookResource.getAllBooksStatic().get(item.getBook().getId());
+         if(cart.getItems().isEmpty()){
+             throw new CartNotFoundException("cart is empty");
+         }
+         
+         for(CartItem item:cart.getItems()){
+             Book book = BookResource.getAllBooksStatic().stream()
+                     .filter(b -> b.getId()==item.getBookId())
+                     .findFirst()
+                     .orElseThrow(()-> new BookNotFoundException("book not found"));
+             if(book.getStock()<item.getQuantity()){
+                 throw new OutOfStockException("not enough stock for book "+ book.getTitle());
+             }
+             book.setStock(book.getStock()-item.getQuantity());
+             
+         }
+         
+         Order order = new Order(orderIdCounter++,customerId, new ArrayList<>(cart.getItems()));
+         allOrders.add(order);
+         cart.clear();
+         
+         return Response.status(Response.Status.CREATED).entity(order).build();
+         
+     }
+     
+     @GET
+     public List<Order> getAllOrders(@PathParam("customerId") int customerId){
+         return allOrders.stream()
+                 .filter(order -> order.getCustomerId() == customerId)
+                 .collect(Collectors.toList());
+     }
+     
+     @GET
+     @Path("/{orderId}")
+     public Response.ResponseBuilder getOrderById(@PathParam("customerId") int customerId,
+             @PathParam("orderId") int orderId){
+         return allOrders.stream()
+                 .filter(order -> order.getCustomerId() == customerId && order.getOrderId() == orderId)
+                 .findFirst()
+                 .map(Response::ok)
+                 .orElseThrow(()-> new InvalidInputException("order not found"));
      }
 }
