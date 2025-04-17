@@ -20,7 +20,7 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {
     private static List<Customer> customers = new ArrayList<>();
-    private static int idCounter = 1;
+    private static int idCounter = 0;
     
     @POST
     public Response createCustomer(Customer customer){

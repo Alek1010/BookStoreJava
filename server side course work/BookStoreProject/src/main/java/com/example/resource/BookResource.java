@@ -32,7 +32,7 @@ public class BookResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createBook(Book book) throws InvalidPropertiesFormatException{
+    public Response createBook(Book book) throws InvalidPropertiesFormatException {
         if (book.getPublicationYear()>Calendar.getInstance().get(Calendar.YEAR)){
             throw new InvalidPropertiesFormatException("Publicatio year cannot be in the future");
     }
