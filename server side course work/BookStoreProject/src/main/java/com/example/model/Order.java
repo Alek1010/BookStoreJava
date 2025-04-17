@@ -14,7 +14,11 @@ public class Order {
     private int orderId;
     private int customerId;
     private List<CartItem> items;
-
+    
+    public Order(){
+        
+    }
+    
     public Order(int orderId, int customerId, List<CartItem> items) {
         this.orderId = orderId;
         this.customerId = customerId;

@@ -26,7 +26,12 @@ public class BookResource {
     private static List<Book> books = new ArrayList<>();
     private static AtomicInteger bookIdCounter = new AtomicInteger(1);
     
+    static{
+        books.add(new Book(1,12,"testing","1234",2020,23.0,50));
+    }
+    
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(Book book) throws InvalidPropertiesFormatException{
         if (book.getPublicationYear()>Calendar.getInstance().get(Calendar.YEAR)){
             throw new InvalidPropertiesFormatException("Publicatio year cannot be in the future");
@@ -43,6 +48,7 @@ public class BookResource {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Collection<Book> getAllBooks(){
         return books;
     }

@@ -24,6 +24,7 @@ public class OrderResource {
      private static int orderIdCounter = 1;
      
      @POST
+     @Consumes(MediaType.APPLICATION_JSON)
      public Response placeOrder(@PathParam("customerId") int customerId){
          Cart cart = CartResource.getCartStatic().stream().filter(c -> c.getCustomerId() == customerId)
                  .findFirst()

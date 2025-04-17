@@ -11,7 +11,10 @@ package com.example.model;
 public class CartItem {
     private int bookId;
     private int quantity;
-   
+    
+    public CartItem(){
+        
+    }
 
     public CartItem(int bookId, int quantity) {
         this.bookId = bookId;

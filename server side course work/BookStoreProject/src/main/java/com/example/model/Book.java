@@ -17,7 +17,11 @@ public class Book {
     private int publicationYear;
     private double price;
     private int stock;
-
+    
+    public Book(){
+        
+    }
+    
     public Book(int id, int AuthorId, String title, String isbn, int publicationYear, double price, int stock) {
         this.id = id;
         this.AuthorId = AuthorId;

@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthorResource {
     private static List<Author> authors = new ArrayList<>();
-    private static AtomicInteger authorIdCounter = new AtomicInteger(1);
+    private static AtomicInteger authorIdCounter = new AtomicInteger(0);
     
     @POST
     public Response createAuthor(Author author){

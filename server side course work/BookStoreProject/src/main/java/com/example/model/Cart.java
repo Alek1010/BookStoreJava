@@ -15,6 +15,10 @@ public class Cart {
     private int customerId;
     private List<CartItem> items;
 
+    public Cart(){
+        
+    }
+    
     public Cart(int customerId) {
         this.customerId = customerId;
         this.items = new ArrayList<>();
