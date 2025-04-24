@@ -34,7 +34,7 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(Book book) throws InvalidPropertiesFormatException {
         if (book.getPublicationYear()>Calendar.getInstance().get(Calendar.YEAR)){
-            throw new InvalidPropertiesFormatException("Publicatio year cannot be in the future");
+            throw new BookNotFoundException("could not create book");
     }
         int id = bookIdCounter.getAndIncrement();
         book.setId(id);
@@ -56,7 +56,7 @@ public class BookResource {
     
     
     @GET
-    @Path("/{id")
+    @Path("/{id}")
     public Book getBook(@PathParam("id") int id){
          return books.stream()
                 .filter(book -> book.getId() == id)
@@ -68,7 +68,7 @@ public class BookResource {
     
     
     @PUT
-    @Path("/{id}")
+    @Path("/{id}")  
     public Book updateBook(@PathParam("id") int id, Book updatedBook){
         boolean found = false;
         updatedBook.setId(id);
