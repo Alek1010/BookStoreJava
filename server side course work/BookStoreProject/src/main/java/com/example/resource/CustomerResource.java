@@ -41,8 +41,8 @@ public class CustomerResource {
     @GET
     @Path("/{id}")
     public Response getCustomerById(@PathParam("id") int id) {
-        Customer customer = customers.get(id);
-        if(customer== null) throw new CustomerNotFoundException("customer not found");
+        
+        Customer customer = customers.stream().filter(c -> c.getId()== id).findFirst().orElseThrow(() -> new CustomerNotFoundException("customer not found"));
         return Response.ok(customer).build();
     }
     

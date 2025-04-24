@@ -48,7 +48,7 @@ public class OrderResource {
          
          Order order = new Order(orderIdCounter++,customerId, new ArrayList<>(cart.getItems()));
          allOrders.add(order);
-         cart.clear();
+         
          
          return Response.status(Response.Status.CREATED).entity(order).build();
          
@@ -63,12 +63,13 @@ public class OrderResource {
      
      @GET
      @Path("/{orderId}")
-     public Response.ResponseBuilder getOrderById(@PathParam("customerId") int customerId,
+     public Response getOrderById(@PathParam("customerId") int customerId,
              @PathParam("orderId") int orderId){
-         return allOrders.stream()
+        Order foundOrder = allOrders.stream()
                  .filter(order -> order.getCustomerId() == customerId && order.getOrderId() == orderId)
                  .findFirst()
-                 .map(Response::ok)
                  .orElseThrow(()-> new InvalidInputException("order not found"));
+        
+        return Response.ok().entity(foundOrder).build();
      }
 }

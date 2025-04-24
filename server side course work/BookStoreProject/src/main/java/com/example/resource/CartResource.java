@@ -35,9 +35,12 @@ public class CartResource {
     }
     
     private Cart findCart(int customerId){
-        return carts.stream().filter(c -> c.getCustomerId() == customerId)
-                .findFirst()
-                .orElse(null);
+        for (Cart cart:carts){
+            if(cart.getCustomerId()==customerId){
+                return cart;
+            }
+        }
+        return null;
     }
     
     public static List<Cart> getCartStatic() {
@@ -47,11 +50,11 @@ public class CartResource {
      @POST
      @Path("/items")
      public Response addItem(@PathParam("customerId") int customerid,CartItem item){
-         if(!CustomerResource.getAllCustomersStatic().contains(customerid)) 
+         if(CustomerResource.getAllCustomersStatic().contains(customerid)) 
              throw new CustomerNotFoundException("customer not found");
          
-         Book book = BookResource.getAllBooksStatic().get(item.getBookId());
-         if(book == null) throw new BookNotFoundException("book not found");
+         Book book = BookResource.getAllBooksStatic().stream().filter(c -> c.getId()== item.getBookId()).findFirst().orElseThrow(() -> new BookNotFoundException("book not found"));
+     
          
          if(item.getQuantity() > book.getStock()) throw new BookNotFoundException("book out of stock");
          
@@ -61,12 +64,12 @@ public class CartResource {
          
      }
      
-     @GET
-     public List<CartItem> viewCart(@PathParam("cutomerId") int customerId){
-         Cart cart = findCart(customerId);
-         if(cart == null ) throw new CartNotFoundException("cart not found");
-         return cart.getItems();
-     }
+    @GET
+    public List<CartItem> viewCart(@PathParam("customerId") int customerId){
+        Cart cart = findCart(customerId);
+        if (cart == null) throw new CartNotFoundException("Cart not found");
+        return cart.getItems();}
+     
      
      @PUT
      @Path("/items/{bookId}")

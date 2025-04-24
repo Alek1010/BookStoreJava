@@ -27,7 +27,7 @@ public class BookResource {
     private static AtomicInteger bookIdCounter = new AtomicInteger(1);
     
     static{
-        books.add(new Book(1,12,"testing","1234",2020,23.0,50));
+        books.add(new Book(0,12,"testing","1234",2020,23.0,50));
     }
     
     @POST
